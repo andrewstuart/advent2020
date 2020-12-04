@@ -18,28 +18,28 @@ func main() {
 
 	br := bufio.NewReader(f)
 
-	out := []string{}
+	in := []string{}
 	for {
 		st, err := br.ReadString('\n')
 		if err == io.EOF {
 			break
 		}
-		out = append(out, strings.TrimSpace(st))
+		in = append(in, strings.TrimSpace(st))
 	}
 
-	in := [][]int{{1, 1}, {1, 3}, {1, 5}, {1, 7}, {2, 1}}
+	slopes := [][]int{{1, 1}, {1, 3}, {1, 5}, {1, 7}, {2, 1}}
 	n := 1
-	for _, input := range in {
-		n *= fn0(input[0], input[1], out)
+	for _, slope := range slopes {
+		n *= countTrees(slope[0], slope[1], in)
 	}
 	fmt.Println(n)
 }
 
-func fn0(down, right int, out []string) int {
-	maxL := len(out[0])
+func countTrees(down, right int, input []string) int {
+	maxL := len(input[0])
 	x, trees := 0, 0
-	for i := 0; i < len(out); i += down {
-		if out[i][x] == '#' {
+	for i := 0; i < len(input); i += down {
+		if input[i][x] == '#' {
 			trees++
 		}
 		x = (x + right) % maxL
