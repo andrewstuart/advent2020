@@ -56,7 +56,7 @@ func count(ints []int) map[int]int {
 }
 
 func search(iters int, tgt, soFar int, nums []int, countTrack map[int]int) []int {
-	if iters < 0 {
+	if iters <= 0 {
 		if soFar == tgt {
 			return []int{}
 		}
@@ -64,7 +64,7 @@ func search(iters int, tgt, soFar int, nums []int, countTrack map[int]int) []int
 	}
 
 	maxInd := sort.SearchInts(nums, tgt-soFar) // can't be any number past the target - total so far
-	nums = nums[:maxInd]
+	nums = nums[:maxInd+1]
 	for _, n := range nums {
 		if countTrack[n] < 1 {
 			continue
