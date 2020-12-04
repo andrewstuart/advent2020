@@ -34,16 +34,14 @@ func main() {
 			log.Fatal(err)
 		}
 
-		n := 0
-		ch := rune(letter[0])
-		for _, ch1 := range str {
-			if ch1 == ch {
-				n++
-			}
+		ch := letter[0]
+		if str[min-1] == ch && str[max-1] == ch {
+			continue
 		}
-		if min <= n && n <= max {
-			ct++
+		if !(str[min-1] == ch || str[max-1] == ch) {
+			continue
 		}
+		ct++
 	}
 	fmt.Println(ct)
 }

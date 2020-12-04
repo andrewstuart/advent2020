@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func main() {
+func maina() {
 	f, err := os.OpenFile("input", os.O_RDONLY, 0400)
 	if err != nil {
 		log.Fatal(err)
