@@ -27,8 +27,15 @@ func main() {
 		out = append(out, strings.TrimSpace(st))
 	}
 
-	down, right := 1, 3
+	in := [][]int{{1, 1}, {1, 3}, {1, 5}, {1, 7}, {2, 1}}
+	n := 1
+	for _, input := range in {
+		n *= fn0(input[0], input[1], out)
+	}
+	fmt.Println(n)
+}
 
+func fn0(down, right int, out []string) int {
 	maxL := len(out[0])
 	x, trees := 0, 0
 	for i := 0; i < len(out); i += down {
@@ -37,5 +44,5 @@ func main() {
 		}
 		x = (x + right) % maxL
 	}
-	fmt.Println(trees)
+	return trees
 }
