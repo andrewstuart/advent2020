@@ -9,6 +9,13 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
+)
+
+var (
+	hcl = regexp.MustCompile("^#[0-9a-f]{6}$")
+	ecl = regexp.MustCompile("^amb|blu|brn|gry|grn|hzl|oth$")
+	pid = regexp.MustCompile(`^\d{9}$`)
 )
 
 var req = map[string]func(string) bool{
@@ -51,20 +58,18 @@ var req = map[string]func(string) bool{
 		return false
 	},
 	"hcl": func(s string) bool {
-		return regexp.MustCompile("^#[0-9a-f]{6}$").MatchString(s)
+		return hcl.MatchString(s)
 	},
 	"ecl": func(s string) bool {
-		return regexp.MustCompile("^amb|blu|brn|gry|grn|hzl|oth$").MatchString(s)
+		return ecl.MatchString(s)
 	},
 	"pid": func(s string) bool {
-		return regexp.MustCompile(`^\d{9}$`).MatchString(s)
-	},
-	"cid": func(s string) bool {
-		return true
+		return pid.MatchString(s)
 	},
 }
 
 func main() {
+	n := time.Now()
 	f, err := os.OpenFile("input", os.O_RDONLY, 0400)
 	if err != nil {
 		log.Fatal(err)
@@ -73,7 +78,6 @@ func main() {
 
 	br := bufio.NewReader(f)
 
-	passports := []map[string]string{}
 	next := map[string]string{}
 
 	valid := 0
@@ -83,14 +87,12 @@ func main() {
 			if check(next) {
 				valid++
 			}
-			passports = append(passports, next)
 			break
 		}
 		if strings.TrimSpace(st) == "" {
 			if check(next) {
 				valid++
 			}
-			passports = append(passports, next)
 			next = map[string]string{}
 			continue
 		}
@@ -100,15 +102,12 @@ func main() {
 		}
 	}
 
-	fmt.Printf("passports = %+v\n", passports)
 	fmt.Println(valid)
+	fmt.Println(time.Since(n))
 }
 
 func check(next map[string]string) bool {
-	for r, fn := range req { // skip cid
-		if r == "cid" {
-			continue
-		}
+	for r, fn := range req {
 		if val, ok := next[r]; !ok || !fn(val) {
 			return false
 		}

@@ -6,10 +6,13 @@ import (
 	"io"
 	"log"
 	"os"
+	"sort"
 	"strings"
+	"time"
 )
 
 func main() {
+	t := time.Now()
 	f, err := os.OpenFile("input", os.O_RDONLY, 0400)
 	if err != nil {
 		log.Fatal(err)
@@ -27,18 +30,19 @@ func main() {
 		rows = append(rows, strings.TrimSpace(st))
 	}
 
-	test := "FBFBBFFRLR"
-	fmt.Println(get(test, 7, 'B'))
+	sort.Slice(rows, func(i, j int) bool {
+		return getID(rows[i]) < getID(rows[j])
+	})
 
-	max := 0
+	last := getID(rows[0])
 	for _, row := range rows {
 		id := getID(row)
-		if id > max {
-			max = id
+		if id-last > 1 {
+			fmt.Println(id, last)
 		}
+		last = id
 	}
-
-	fmt.Println(max)
+	fmt.Println(time.Since(t))
 }
 
 func get(row string, num int, char byte) int {
